@@ -62,10 +62,15 @@ namespace CommandLib
                     {
                         args[i] = Convert(arguments[i], param);
                     }
-                    catch (TargetInvocationException)
+                    catch (CommandException e)
+                    {
+                        return Result.Fail(e.Message);
+                    }
+                    catch (Exception)
                     {
                         return Result.Fail($"Could not convert {arguments[i]} to required type {info.Parameters[i].ParameterType.Name}");
                     }
+
                     var constraints = param.GetCustomAttributes<Constraints.ConstraintAttribute>();
                     if (!constraints.Any())
                         continue;
@@ -80,6 +85,9 @@ namespace CommandLib
                             break;
 
                         if (!isMet && requireAny)
+                            continue;
+
+                        if (isMet)
                             continue;
 
                         return Result.Fail(constraint.GetFailureMessage());
