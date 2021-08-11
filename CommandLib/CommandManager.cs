@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -77,21 +78,29 @@ namespace CommandLib
 
                     var requireAny = param.IsDefined(typeof(RequireAnyAttribute));
 
+                    bool success = true;
+                    var messages = new List<string>();
+
                     foreach (var constraint in constraints)
                     {
                         var isMet = constraint.MeetsConstraint(arguments[i]);
 
-                        if (isMet && requireAny)
+                        if (!isMet)
+                        {
+                            messages.Add(constraint.GetFailureMessage());
+                            if (requireAny)
+                                continue;
+
+                            success = false;
                             break;
+                        }
 
-                        if (!isMet && requireAny)
-                            continue;
-
-                        if (isMet)
-                            continue;
-
-                        return Result.Fail(constraint.GetFailureMessage());
+                        if (requireAny)
+                            break;
                     }
+
+                    if (!success)
+                        return Result.Fail(string.Join(Environment.NewLine, messages));
                 }
             }
 
@@ -111,7 +120,6 @@ namespace CommandLib
 
             return default;
         }
-
         public static void RegisterCommandClass<T>() where T : class
         {
             _type = typeof(T);
