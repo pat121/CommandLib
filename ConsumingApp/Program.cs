@@ -25,7 +25,6 @@ namespace ConsumingApp
                 Console.WriteLine("Error: {0}", e.Message);
             }
         }
-
         static void PrintResult(Result result)
         {
             switch (result.Type)
