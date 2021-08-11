@@ -19,11 +19,7 @@ namespace CommandLib
         /// Represents a generic success with no specific message.
         /// </summary>
         public static readonly Result Success = new(null, ResultType.Success);
-        /// <summary>
-        /// Represents a success that should not be printed.
-        /// </summary>
-        public static readonly Result SuccessNoResult = new("", ResultType.Success);
-
+        
         public Result(string message, ResultType type)
         {
             Message = message;
