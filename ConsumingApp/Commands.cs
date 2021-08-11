@@ -83,16 +83,20 @@ namespace ConsumingApp
                 {
                     Console.Write("Are you sure you want to delete {0}? ", file);
                     var key = Console.ReadKey();
-                    Console.Write(" ");
-
+                    
                     if (key.Key == ConsoleKey.Y)
                     {
                         File.Delete(file);
+                        Console.WriteLine(" Deleted");
+                    }
+                    else
+                    {
+                        Console.WriteLine(" Skipping...");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Skipping...");
+                    Console.WriteLine("Couldn't find file {0}, skipping...", file);
                 }
             }
 
